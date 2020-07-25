@@ -1,0 +1,16 @@
+household <- data.table::fread("household_power_consumption.txt")
+household$Date <- as.Date(household$Date, "%d/%m/%Y")
+household <- household[household$Date %in% c(as.Date("2007-02-01", "%Y-%m-%d"), as.Date("2007-02-02", "%Y-%m-%d")), ]
+household$DateTime <- paste(household$Date, household$Time)
+household$DateTime <- as.POSIXct(strptime(household$DateTime, format = "%Y-%m-%d %H:%M:%S"))
+household$Global_active_power <- as.numeric(household$Global_active_power)
+household$Sub_metering_1 <- as.numeric(household$Sub_metering_1)
+household$Sub_metering_2 <- as.numeric(household$Sub_metering_2)
+household$Sub_metering_3 <- as.numeric(household$Sub_metering_3)
+plot(household$DateTime, household$Sub_metering_1, type = "l", xlab = " ", ylab = "Energy sub metering")
+points(household$DateTime, household$Sub_metering_2, type = "l", col = "red")
+points(household$DateTime, household$Sub_metering_3, type = "l", col = "blue")
+legend("topright", legend = c("Sub_metering_1", "Sub_metering_2", "Sub_metering_3"),
+       col = c("black", "red", "blue"), lty = 1)
+dev.copy(png, "plot3.png")
+dev.off()

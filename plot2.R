@@ -1,0 +1,10 @@
+household <- data.table::fread("household_power_consumption.txt")
+household$Date <- as.Date(household$Date, "%d/%m/%Y")
+household <- household[household$Date %in% c(as.Date("2007-02-01", "%Y-%m-%d"), as.Date("2007-02-02", "%Y-%m-%d")), ]
+household$DateTime <- paste(household$Date, household$Time)
+household$DateTime <- as.POSIXct(strptime(household$DateTime, format = "%Y-%m-%d %H:%M:%S"))
+household$Global_active_power <- as.numeric(household$Global_active_power)
+par(mar = c(5, 4, 4, 4))
+plot(household$DateTime, household$Global_active_power, type = "l", lwd = 1, ylab = "Global Active Power (kilowatts)", xlab = " ")
+dev.copy(png, "plot2.png")
+dev.off()
